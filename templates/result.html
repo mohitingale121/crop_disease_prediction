@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+    <link rel="icon" sizes="48x48" href="{{ url_for('static', filename='reversed-removebg.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        /* General styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: rgba(241, 245, 248, 0.5); /* 50% transparency */
+            margin: 0;
+            padding: 0;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            background-image: url('https://i.pinimg.com/originals/30/72/d7/3072d780c677072f5037aeb2413e2061.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            overflow-x: hidden;
+        }
+
+        /* Container styling */
+        .container {
+            background-color: rgba(255, 255, 255, 0.5);  /* Set the container to be 50% transparent */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 40px 30px;
+            width: 80%;
+            max-width: 900px;
+            text-align: center;
+            overflow: auto;
+            margin-top: 50px;  /* Added top margin */
+            transform: translateY(0);
+            transition: transform 0.3s ease-in-out;
+            max-height: 90vh; /* Limit the height of the container */
+            overflow-y: scroll; /* Allow scrolling for content */
+        }
+
+        .container:hover {
+            transform: translateY(-40px);
+        }
+
+        /* Title styling */
+        .result-title {
+            font-size: 3rem;  /* Increased font size */
+            color: #004526;
+            margin-bottom: 20px;
+            font-weight: 900;
+        }
+
+        /* Disease name styling */
+        .disease-name {
+            font-size: 2.5rem;
+            color: #000000;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+
+        /* User information section */
+        h2 {
+            color: #000000;
+            font-size: 1.5rem;
+            margin-top: 30px;
+            font-weight: 500;
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin: 10px 0;
+            line-height: 1.5;
+            color: #000000;
+        }
+
+        /* Image styling */
+        img {
+            border-radius: 10px;
+            margin-top: 20px;
+            max-width: 300px; /* Reduced image size */
+            height: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Supplements section */
+        .supplements {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .supplement-item {
+            text-align: center;
+            width: 200px; /* Define width of each supplement item */
+            max-width: 200px;
+        }
+
+        .supplements p {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #000000;
+        }
+
+        .supplements img {
+            width: 150px; /* Adjust the image size */
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .supplements a {
+            font-size: 1rem;
+            color: #010162;
+            text-decoration: none;
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+
+        .supplements a:hover {
+            text-decoration: underline;
+        }
+
+        /* Button Styling */
+        .home-button {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 1.2rem;
+            padding: 15px 30px;
+            margin-top: 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .home-button:hover {
+            background-color: #45a049;
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .container {
+                width: 90%;
+                padding: 20px;
+            }
+
+            .result-title {
+                font-size: 2rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+
+            .home-button {
+                font-size: 1rem;
+                padding: 10px 20px;
+            }
+
+            .disease-name {
+                font-size: 2rem; /* Adjusted for smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="result-title">Disease Prediction Result</h1>
+
+        <!-- Display user details from form_data -->
+        {% if form_data %}
+        <h2>User Information</h2>
+        <p><strong>Name:</strong> {{ form_data.name }}</p>
+        <p><strong>Email:</strong> {{ form_data.email }}</p>
+        {% endif %}
+
+        <p class="disease-name"><strong>Disease:</strong> {{ disease_name }}</p>
+        <p><strong>Description:</strong> {{ description }}</p>
+        <p><strong>Steps:</strong> {{ steps }}</p>
+        <img src="{{ image_url }}" alt="{{ disease_name }}">
+
+        <h2>Supplements</h2>
+        <div class="supplements">
+            {% for supplement in supplements %}
+                <div class="supplement-item">
+                    <img src="{{ supplement.image }}" alt="{{ supplement.name }}">
+                    <p>{{ supplement.name }}</p>
+                    <p><a href="{{ supplement.link }}" target="_blank">Buy Here</a></p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Home Navigation Button -->
+        <div>
+            <a href="/index" class="home-button">Go Home</a>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+</html>
