@@ -8,7 +8,7 @@ import os
 from datetime import datetime
 
 # Initialize Flask app
-app = Flask(__name__)
+app = Flask(_name_)
 app.secret_key = 'your_secret_key'  # Set a secret key for sessions
 
 # MySQL Database Configuration
@@ -39,19 +39,19 @@ supplement_info = pd.read_csv(SUPPLEMENT_INFO_PATH)
 
 # Define class names (same as before)
 class_names = [
-    'Apple___Apple_scab', 'Apple___Black_rot', 'Apple___Cedar_apple_rust', 'Apple___healthy',
-    'Blueberry___healthy', 'Cherry___Powdery_mildew',
-    'Cherry___healthy', 'Corn___Cercospora_leaf_spot Gray_leaf_spot',
-    'Corn___Common_rust', 'Corn___Northern_Leaf_Blight', 'Corn___healthy',
-    'Grape___Black_rot', 'Grape___Esca_(Black_Measles)', 'Grape___Leaf_blight_(Isariopsis_Leaf_Spot)',
-    'Grape___healthy', 'Orange___Haunglongbing_(Citrus_greening)', 'Peach___Bacterial_spot',
-    'Peach___healthy', 'Pepper,_bell___Bacterial_spot', 'Pepper,_bell___healthy',
-    'Potato___Early_blight', 'Potato___Late_blight', 'Potato___healthy',
-    'Raspberry___healthy', 'Soybean___healthy', 'Squash___Powdery_mildew',
-    'Strawberry___Leaf_scorch', 'Strawberry___healthy', 'Tomato___Bacterial_spot',
-    'Tomato___Early_blight', 'Tomato___Late_blight', 'Tomato___Leaf_Mold',
-    'Tomato___Septoria_leaf_spot', 'Tomato___Spider_mites Two-spotted_spider_mite',
-    'Tomato___Target_Spot', 'Tomato___Tomato_Yellow_Leaf_Curl_Virus', 'Tomato___Tomato_mosaic_virus',
+    'Apple__Apple_scab', 'Apple_Black_rot', 'Apple_Cedar_apple_rust', 'Apple__healthy',
+    'Blueberry__healthy', 'Cherry__Powdery_mildew',
+    'Cherry__healthy', 'Corn__Cercospora_leaf_spot Gray_leaf_spot',
+    'Corn__Common_rust', 'Corn_Northern_Leaf_Blight', 'Corn__healthy',
+    'Grape__Black_rot', 'Grape_Esca(Black_Measles)', 'Grape__Leaf_blight(Isariopsis_Leaf_Spot)',
+    'Grape__healthy', 'Orange_Haunglongbing(Citrus_greening)', 'Peach___Bacterial_spot',
+    'Peach__healthy', 'Pepper,_bell_Bacterial_spot', 'Pepper,_bell__healthy',
+    'Potato__Early_blight', 'Potato_Late_blight', 'Potato__healthy',
+    'Raspberry__healthy', 'Soybean_healthy', 'Squash__Powdery_mildew',
+    'Strawberry__Leaf_scorch', 'Strawberry_healthy', 'Tomato__Bacterial_spot',
+    'Tomato__Early_blight', 'Tomato_Late_blight', 'Tomato__Leaf_Mold',
+    'Tomato__Septoria_leaf_spot', 'Tomato__Spider_mites Two-spotted_spider_mite',
+    'Tomato__Target_Spot', 'Tomato_Tomato_Yellow_Leaf_Curl_Virus', 'Tomato__Tomato_mosaic_virus',
     'Tomato___healthy'
 ]
 
@@ -74,10 +74,10 @@ def save_registration_data(form_data, disease_name, city_name):
     try:
         cursor = connection.cursor()
         query = """
-            INSERT INTO registrations (name, email, city, disease_name)
-            VALUES (%s, %s, %s, %s)
+            INSERT INTO registrations (name, email, city, gender, country, message, disease_name)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
-        data = (form_data['name'], form_data['email'], city_name, disease_name)
+        data = (form_data['name'], form_data['email'], city_name, form_data['gender'], form_data['country'], form_data['message'], disease_name)
         cursor.execute(query, data)
         connection.commit()
     except mysql.connector.Error as err:
@@ -116,12 +116,15 @@ def register():
     name = request.form.get('name')
     email = request.form.get('email')
     city = request.form.get('city')
+    gender = request.form.get('gender')
+    country = request.form.get('country')
+    message = request.form.get('message')
 
     # Validate form data
-    if not name or not email or not city:
-        return redirect(url_for('home', error="All fields (name, email, city) are required"))
+    if not name or not email or not city or not gender or not country:
+        return redirect(url_for('home', error="All fields (name, email, city, gender, country) are required"))
     
-    form_data = {'name': name, 'email': email, 'city': city}
+    form_data = {'name': name, 'email': email, 'city': city, 'gender': gender, 'country': country, 'message': message}
     session['form_data'] = form_data  # Store form data in session
     return redirect(url_for('index'))  # Redirect without form_data in URL
 
@@ -167,5 +170,5 @@ def predict():
     
     return render_template('result.html', disease_name=disease_name, description=disease_description, steps=possible_steps, image_url=image_url, supplements=supplements)
 
-if __name__ == "__main__":
+if _name_ == "_main_":
     app.run(debug=True)
